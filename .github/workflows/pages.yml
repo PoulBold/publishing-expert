@@ -3,7 +3,7 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # замени на master, если нужно
+      - main
 
 permissions:
   contents: read
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -28,7 +28,7 @@ jobs:
           bundler-cache: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -43,7 +43,7 @@ jobs:
           bundle exec jekyll build
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v2.0.1
+        uses: actions/upload-pages-artifact@v1
         with:
           path: ./_site
 
