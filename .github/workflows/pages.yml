@@ -3,7 +3,7 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # замени, если у тебя ветка другая
+      - main  # замени на master, если нужно
 
 permissions:
   contents: read
@@ -43,7 +43,7 @@ jobs:
           bundle exec jekyll build
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ./_site
 
