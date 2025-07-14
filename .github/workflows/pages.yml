@@ -1,35 +1,49 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # измени на master, если у тебя другая ветка
+      - main  # замени, если у тебя ветка другая
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - uses: ruby/setup-ruby@v1
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1
           bundler-cache: true
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - run: npm install
-      - run: npm run build
-      - run: bundle exec jekyll build
+      - name: Install dependencies
+        run: |
+          npm install
+          bundle install
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Build site
+        run: |
+          npm run build
+          bundle exec jekyll build
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ./_site
 
@@ -37,8 +51,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages     # 👈 это обязательно
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/deploy-pages@v2
+      - name: Deploy to GitHub Pages
         id: deployment
+        uses: actions/deploy-pages@v2
