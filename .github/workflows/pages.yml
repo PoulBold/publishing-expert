@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # или master, если у тебя такая ветка
+      - main  # измени на master, если у тебя другая ветка
 
 permissions:
   contents: read
@@ -15,14 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1
           bundler-cache: true
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
+
       - run: npm install
       - run: npm run build
       - run: bundle exec jekyll build
@@ -35,7 +37,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
+      name: github-pages     # 👈 это обязательно
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/deploy-pages@v1
+      - uses: actions/deploy-pages@v2
+        id: deployment
