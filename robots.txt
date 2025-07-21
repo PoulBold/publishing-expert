@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /tags/
+Disallow: /norobots/
+Sitemap: https://www.publishing-expert.com/sitemap.xml
